@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single"
+
+        >
+
+        <item android:id="@+id/login"
+
+            android:textColor="#D5C649"
+            android:title="로그인"/>
+
+      <item android:id="@+id/Bit"
+
+            android:textColor="#D5C649"
+            android:title="코인 정보"/>-
+
+
+
+    </group>
+
+</menu>

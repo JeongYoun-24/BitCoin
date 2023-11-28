@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EAECEB"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <TextView
+                android:id="@+id/rank"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:text="순위" />
+
+            <!--<ImageView
+                android:id="@+id/imgUser_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_launcher_foreground" />-->
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="#E6E6E6"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="#EEEEFA"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:textColor="#666666"
+                    android:textSize="14dp"
+                    tools:text="기호" />
+
+
+                <TextView
+                    android:id="@+id/BitName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#EEEEFA"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:textColor="#000000"
+                    android:textSize="17dp"
+                    android:textStyle="bold"
+                    tools:text="이름" />
+
+
+                <TextView
+                    android:id="@+id/symbol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="#EEEEFA"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:textColor="#666666"
+                    android:textSize="14dp"
+                    tools:text="기호" />
+
+
+                <TextView
+                    android:id="@+id/circulating_supply"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="공급량" />
+
+                <TextView
+                    android:id="@+id/max_supply"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="최대공급량" />
+
+                <TextView
+                    android:id="@+id/first_data_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="생성일자" />
+
+                <TextView
+                    android:id="@+id/last_updated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="업데이트 일자" />
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="가격" />
+
+                <TextView
+                    android:id="@+id/market_cap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="총시가" />
+
+                <TextView
+                    android:id="@+id/volume_24h"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="거래량" />
+
+                <TextView
+                    android:id="@+id/percent_change_24h"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="최근24시간 변동값" />
+
+                <TextView
+                    android:id="@+id/percent_change_7d"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="최근7일 변동값" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
