@@ -9,6 +9,14 @@
 
             android:textColor="#D5C649"
             android:title="로그인"/>
+        <item android:id="@+id/logout"
+
+            android:textColor="#D5C649"
+            android:title="로그아웃"/>
+        <item android:id="@+id/main"
+
+            android:textColor="#D5C649"
+            android:title="메인"/>
 
       <item android:id="@+id/Bit"
 

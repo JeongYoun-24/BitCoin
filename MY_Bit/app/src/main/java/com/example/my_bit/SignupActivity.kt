@@ -9,11 +9,14 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import com.example.my_bit.databinding.ActivitySignupBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.Firebase
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
     private val binding by lazy { ActivitySignupBinding.inflate(layoutInflater) }
@@ -24,6 +27,7 @@ class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
 
         // 인증 초기화
         mAutn = Firebase.auth
@@ -58,14 +62,14 @@ class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 if (task.isSuccessful) {
                    // 성공시 실행
                     Log.d("회원가입 데이터 값 ","들어왔는지 확인")
-//                    val intent : Intent = Intent(this@SignupActivity,MainActivity::class.java)ㅕㄴㄷㄱ
-//                    startActivity(intent)
-                    addUserDatabase(name,email,mAutn.currentUser?.uid!!)
+                    val intent : Intent = Intent(this@SignupActivity,LoginActivity::class.java)
+                    startActivity(intent)
+                    addUserDatabase(name,email, mAutn.currentUser?.uid.toString())
 
                     Log.d("회원가입 데이터 값 ","${mAutn.currentUser?.uid!!}")
                 } else {
                    // 실패시 실행
-                    Log.d("실패","들어왔는지 확인")
+                    Log.d("실패","실패??")
                     Toast.makeText(this,"회원가입 실패",Toast.LENGTH_SHORT).show()
 
                 }
@@ -74,7 +78,7 @@ class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
     private fun addUserDatabase(name :String,email: String,uId: String){
         val user = User(name,email,uId)
-        mDBRef.child("users").child(uId).setValue(user)
+        mDBRef.child("user").child(uId).setValue(User(name,email,uId))
         Log.d("값확인","들어왔나요")
     }
 
