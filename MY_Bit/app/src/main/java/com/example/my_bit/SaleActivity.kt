@@ -3,12 +3,11 @@ package com.example.my_bit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
-import com.example.my_bit.databinding.ActivityMainBinding
-import com.example.my_bit.databinding.ActivityUserBinding
+import com.example.my_bit.databinding.ActivitySaleBinding
+import com.example.my_bit.databinding.ActivitySignupBinding
 import com.example.my_bit.`object`.BitLogin
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,43 +16,38 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private val binding by lazy { ActivityUserBinding.inflate(layoutInflater) }
+class SaleActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelectedListener{
+    private val binding by lazy { ActivitySaleBinding.inflate(layoutInflater) }
 
     lateinit var mAutn : FirebaseAuth
     private lateinit var mDBRef: DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        val uId = intent.getStringExtra("id")
-        val email = intent.getStringExtra("email")
-        val password = intent.getStringExtra("password")
 
         // 인증 초기화
         mAutn = Firebase.auth
         // DB 초기화
         mDBRef = Firebase.database.reference
 
+        val userUID = intent.getStringExtra("id")
 
 
-        mDBRef.child("point").child("${uId.toString()}").get().addOnSuccessListener {
+        mDBRef.child("point").child("${userUID.toString()}").get().addOnSuccessListener {
             val count = it.child("count").value
-            val name = it.child("name").value
             val point = it.child("point").value
+            mDBRef.child("coin").child("${userUID.toString()}").get().addOnSuccessListener {
+                val count = it.child("coint").value
 
-            binding.CoinCount.text = count.toString()
-            binding.name.text = name.toString()
-            binding.point.text = point.toString()
-            binding.email.text = email.toString()
-
-            mDBRef.child("coin").child("${uId.toString()}").get().addOnSuccessListener {
-                val coin = it.child("coin").value
-
-                binding.Coin.text = coin.toString()
+                binding.CoinCount.text = count.toString()
             }
 
+
         }
+
+//        mDBRef.child("coin").child("${userId.toString()}").setValue(UserBit(total.toString(),""))
+
 
 
 
@@ -63,7 +57,6 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         binding.navieView.setNavigationItemSelectedListener(this)
 
-
     }
 
     // 네이게이션 메뉴 아이템 클릭시 수행 메서드
@@ -72,7 +65,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val intent2 = Intent(this, LoginActivity::class.java) // 메인 액티비티
         val intent3 = Intent(this, MainActivity::class.java) //
         val intent4 = Intent(this, BitActivity::class.java) //
-        val intent5 = Intent(this, SaleActivity::class.java) //
+        val intent5 = Intent(this, UserActivity::class.java) //
         when (item.itemId) {
             R.id.logout -> {
                 FirebaseAuth.getInstance().signOut()
@@ -92,14 +85,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 startActivity(intent3)
             }
-            R.id.Bit -> {
-                val userUID = intent.getStringExtra("id")
-
-                Log.d("1234",userUID.toString())
-                intent4.putExtra("id",userUID.toString())
-
-                startActivity(intent4)
-            }
+            R.id.Bit -> startActivity(intent4)
 
             R.id.Sale -> {
                 val userUID = intent.getStringExtra("id")
@@ -115,4 +101,5 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.layoutDrawer.closeDrawers() //네이게이션 닫기
         return false
     }
+
 }

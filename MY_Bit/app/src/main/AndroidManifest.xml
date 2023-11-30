@@ -18,6 +18,9 @@
         android:theme="@style/Theme.MY_Bit"
         tools:targetApi="31">
         <activity
+            android:name=".SaleActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserActivity"
             android:exported="false" />
         <activity

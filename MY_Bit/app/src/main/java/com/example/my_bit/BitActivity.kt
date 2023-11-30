@@ -47,12 +47,14 @@ class BitActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
     }
 
+
     // 네이게이션 메뉴 아이템 클릭시 수행 메서드
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         val intent2 = Intent(this, LoginActivity::class.java) // 메인 액티비티
         val intent3 = Intent(this, MainActivity::class.java) //
         val intent4 = Intent(this, BitActivity::class.java) //
+        val intent5 = Intent(this, SaleActivity::class.java) //
         when (item.itemId) {
             R.id.logout -> {
                 FirebaseAuth.getInstance().signOut()
@@ -64,8 +66,31 @@ class BitActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 editor.clear();
                 editor.commit();
             }
-            R.id.main -> startActivity(intent3)
-            R.id.Bit -> startActivity(intent4)
+            R.id.main -> {
+                val userUID = intent.getStringExtra("id")
+
+                Log.d("1234",userUID.toString())
+                intent3.putExtra("id",userUID.toString())
+
+                startActivity(intent3)
+            }
+            R.id.Bit -> {
+                val userUID = intent.getStringExtra("id")
+
+                Log.d("1234",userUID.toString())
+                intent4.putExtra("id",userUID.toString())
+                startActivity(intent4)
+            }
+
+            R.id.Sale -> {
+                val userUID = intent.getStringExtra("id")
+
+                Log.d("1234",userUID.toString())
+                intent5.putExtra("id",userUID.toString())
+
+                startActivity(intent5)
+
+            }
 
         }
         binding.layoutDrawer.closeDrawers() //네이게이션 닫기
