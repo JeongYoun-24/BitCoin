@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.core.view.GravityCompat
 import com.example.my_bit.databinding.ActivitySaleBinding
 import com.example.my_bit.databinding.ActivitySignupBinding
@@ -31,19 +32,49 @@ class SaleActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         // DB 초기화
         mDBRef = Firebase.database.reference
 
-        val userUID = intent.getStringExtra("id")
+        var userUID = intent.getStringExtra("id")
 
-
+        Log.d("받은데이터값",userUID.toString())
         mDBRef.child("point").child("${userUID.toString()}").get().addOnSuccessListener {
             val count = it.child("count").value
             val point = it.child("point").value
             mDBRef.child("coin").child("${userUID.toString()}").get().addOnSuccessListener {
-                val count = it.child("coint").value
+                val count = it.child("coin").value
 
                 binding.CoinCount.text = count.toString()
             }
 
 
+        }
+
+        binding.saleBut.setOnClickListener(){
+          val saleCoin=  binding.saleCoin.text.toString()  // 교환하는 코인량
+            val  saleCoin2 : Int = saleCoin.toInt()
+            Log.d("교환 갯수",saleCoin2.toString())
+
+            val cointCount = binding.CoinCount.text.toString() // 들고있는 코인량
+            val  cointCount2 : Int = cointCount.toInt()
+            Log.d("코인량 ",cointCount2.toString())
+
+            if(cointCount2 >saleCoin2){
+                Log.d("교환 갯수","교환가능")
+               /* val
+
+                mDBRef.child("user").child("${userUID.toString()}").get().addOnSuccessListener {
+                    val name = it.child("name").value
+
+                    mDBRef.child("coin").child("${userUID.toString()}").setValue(UserBit(name.toString(),""))
+                    mDBRef.child("point").child("${userUID.toString()}").setValue(BitPoint(0,"","${name.toString()}")*/
+                }
+
+
+
+            }else{
+                Log.d("교환 갯수","교환가능한 코인 부족 ")
+                Toast.makeText(this,"교환가능 코인 갯수 초과", Toast.LENGTH_LONG).show();
+            }
+            
+            
         }
 
 //        mDBRef.child("coin").child("${userId.toString()}").setValue(UserBit(total.toString(),""))
