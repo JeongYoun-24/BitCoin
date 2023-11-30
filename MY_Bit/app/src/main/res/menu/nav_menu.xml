@@ -5,10 +5,7 @@
 
         >
 
-        <item android:id="@+id/login"
 
-            android:textColor="#D5C649"
-            android:title="로그인"/>
         <item android:id="@+id/logout"
 
             android:textColor="#D5C649"
@@ -18,10 +15,14 @@
             android:textColor="#D5C649"
             android:title="메인"/>
 
-      <item android:id="@+id/Bit"
+        <item android:id="@+id/Bit"
 
             android:textColor="#D5C649"
             android:title="코인 정보"/>-
+        <item android:id="@+id/Sale"
+
+            android:textColor="#D5C649"
+            android:title="판매소"/>-
 
 
 

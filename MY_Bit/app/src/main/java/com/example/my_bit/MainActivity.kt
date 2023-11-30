@@ -1,39 +1,21 @@
 package com.example.my_bit
 
 import android.content.Intent
-import android.content.IntentSender.OnFinished
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.test.espresso.Espresso
 import android.text.Editable
 import android.util.Log
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.my_bit.adpter.BitAdapter
-import com.example.my_bit.data.BitData
-import com.example.my_bit.data.UpBitData
 import com.example.my_bit.databinding.ActivityMainBinding
 import com.example.my_bit.`object`.BitLogin
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.nio.charset.Charset
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.timer
@@ -68,46 +50,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var userUID = intent.getStringExtra("id")
 
         Log.d("받은데이터 ",userUID.toString())
-        binding.logout.setOnClickListener(){
-            FirebaseAuth.getInstance().signOut()
-            BitLogin.clearUser(this)
-            val intent : Intent = Intent(this,LoginActivity::class.java)
-            startActivity(intent)
 
-        }
-        val pref = getSharedPreferences("account", 0)
+
+        val pref = getSharedPreferences("Prefs", 0)
         //shared에 있는 'userEmail'이란 데이터를 불러온다는 뜻. 0 대신 MODE_PRIVATE라고 입력하셔도 됩니다.
+        val savedEmail =pref.getString("email", "").toString()
+        val savedPwd =pref.getString("pwd", "").toString()
 
-        val savedEmail =pref.getString("uId", "").toString()
-        val savedPwd =pref.getString("Pwd", "").toString()
+        binding.UserBut.setOnClickListener(){
+            val intent : Intent = Intent(this,UserActivity::class.java)
+            intent.putExtra("id",userUID)
+            intent.putExtra("email",savedEmail)
+            intent.putExtra("password",savedPwd)
 
-        Log.d()
+            startActivity(intent)
+        }
 
-
-
-//        tv_info.setText("ID : " + MySharedPreferences.getUserId(this))
-//
-//        btn_logout.setOnClickListener {
-//            MySharedPreferences.clearUser(this)
-//            val intent = Intent(this, LoginActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
-
-
-
-      /*  if(userUID != null){
-            mDBRef.child("users").get().addOnSuccessListener {
-                val map = it.child("userUID").children.iterator().next().getValue( )as HashMap<String,Any>
-                val name = map.get("name").toString()
-
-
-                Log.d("firebase", "Got value ${it.value}    ${name.toString()}")
-            }.addOnFailureListener{
-                Log.e("firebase", "Error getting data", it)
-            }
-
-        }*/
         binding.userId.setText(BitLogin.getUserId(this))
         // 파이베이스에서 데이터 불러오기
 
@@ -120,7 +78,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.d("데이터받은결과값 1", "${name}")
                 Log.d("데이터받은결과값 ㅕㄴㄷㄱ", "Got value ${it.value}")
 
-                mDBRef.child("coin").child(name.toString()).get().addOnSuccessListener {
+                mDBRef.child("coin").child(userUID.toString()).get().addOnSuccessListener {
                     var bit = it.child("coin").value
 
                     binding.BitCoin.text = Editable.Factory.getInstance().newEditable(bit.toString())
@@ -133,22 +91,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
-        /*mDBRef.child("coin").child(userUID.toString()).get().addOnSuccessListener {
-            var name =     it.child("name").value
-
-            binding.userId.text = name.toString()
-            Log.d("데이터받은결과값 1", "${name}")
-            Log.d("데이터받은결과값 ㅕㄴㄷㄱ", "Got value ${it.value}")
-        }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
-        }*/
 
 
 
 
 
         binding.BitBut.setOnClickListener(){
-            startsTime()
+            startsTime(userUID.toString())
             binding.BitBut.isEnabled = false
         }
 
@@ -205,9 +154,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     var dogi = ""
+    var total :Int =0
     
 //    스레드로 타임어택
-    private fun startsTime(){
+    private fun startsTime(userId: String) {
+        coin = 0
         timerTask = timer(period = 10){
             time++
             hour
@@ -233,13 +184,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         timerTask?.cancel()
                         coin ++
                         dogi = coin.toString()
-                        mDBRef.child("coin").child("유저1").get().addOnSuccessListener {
+                        mDBRef.child("coin").child("${userId.toString()}").get().addOnSuccessListener {
                             var bit = it.child("coin").value
-                                bit =+ coin
+                            val bit2 = bit.toString()
+                            val bit3 : Int =bit2.toInt()
+
+                            total = bit3+coin
 
 
-                            binding.BitCoin.text = Editable.Factory.getInstance().newEditable(bit.toString())
-                            mDBRef.child("coin").child("유저1").setValue(UserBit(dogi.toString(),""))
+                            binding.BitCoin.text = Editable.Factory.getInstance().newEditable(total.toString())
+                            mDBRef.child("coin").child("${userId.toString()}").setValue(UserBit(total.toString(),""))
                         }
 
 //                        binding.BitCoin.text = Editable.Factory.getInstance().newEditable(dogi.toString())
@@ -300,15 +254,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     // 네이게이션 메뉴 아이템 클릭시 수행 메서드
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val intent = Intent(this, LoginActivity::class.java) // 로그인 액티비티
-        val intent2 = Intent(this, BitActivity::class.java) // 메인 액티비티
-        val intent3 = Intent(this, MainActivity::class.java) // 챔피언 스펠 액티비티
-//        val intent4 = Intent(this, My_RuneActivity::class.java) // 챔피언 룬 액티비티
-//        val intent5 = Intent(this, My_ItemListActivity::class.java) // 챔피언 룬 액티비티
+
+        val intent2 = Intent(this, LoginActivity::class.java) // 메인 액티비티
+        val intent3 = Intent(this, MainActivity::class.java) //
+        val intent4 = Intent(this, BitActivity::class.java) //
         when (item.itemId) {
-            R.id.login -> startActivity(intent)
+            R.id.logout -> {
+                FirebaseAuth.getInstance().signOut()
+                BitLogin.clearUser(this)
+                val intent : Intent = Intent(this,LoginActivity::class.java)
+                startActivity(intent)
+                val pref = getSharedPreferences("Prefs", 0)
+                var editor = pref.edit();
+                editor.clear();
+                editor.commit();
+            }
             R.id.main -> startActivity(intent3)
-            R.id.Bit -> startActivity(intent2)
+            R.id.Bit -> startActivity(intent4)
 
         }
         binding.layoutDrawer.closeDrawers() //네이게이션 닫기

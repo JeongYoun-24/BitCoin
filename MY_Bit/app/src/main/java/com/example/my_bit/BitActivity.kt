@@ -11,7 +11,9 @@ import com.example.my_bit.adpter.BitAdapter
 import com.example.my_bit.data.UpBitData
 import com.example.my_bit.databinding.ActivityBitBinding
 import com.example.my_bit.databinding.ActivityLoginBinding
+import com.example.my_bit.`object`.BitLogin
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -47,14 +49,23 @@ class BitActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
     // 네이게이션 메뉴 아이템 클릭시 수행 메서드
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val intent = Intent(this, LoginActivity::class.java) // 로그인 액티비티
-        val intent2 = Intent(this, MainActivity::class.java) // 메인 액티비티
-//        val intent3 = Intent(this, My_Champion::class.java) // 챔피언 스펠 액티비티
-//        val intent4 = Intent(this, My_RuneActivity::class.java) // 챔피언 룬 액티비티
-//        val intent5 = Intent(this, My_ItemListActivity::class.java) // 챔피언 룬 액티비티
-        when(item.itemId){
-            R.id.login -> startActivity(intent)
-            R.id.Bit -> startActivity(intent2)
+
+        val intent2 = Intent(this, LoginActivity::class.java) // 메인 액티비티
+        val intent3 = Intent(this, MainActivity::class.java) //
+        val intent4 = Intent(this, BitActivity::class.java) //
+        when (item.itemId) {
+            R.id.logout -> {
+                FirebaseAuth.getInstance().signOut()
+                BitLogin.clearUser(this)
+                val intent : Intent = Intent(this,LoginActivity::class.java)
+                startActivity(intent)
+                val pref = getSharedPreferences("Prefs", 0)
+                var editor = pref.edit();
+                editor.clear();
+                editor.commit();
+            }
+            R.id.main -> startActivity(intent3)
+            R.id.Bit -> startActivity(intent4)
 
         }
         binding.layoutDrawer.closeDrawers() //네이게이션 닫기
