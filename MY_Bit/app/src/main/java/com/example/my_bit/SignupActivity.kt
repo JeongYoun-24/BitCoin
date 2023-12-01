@@ -9,13 +9,16 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import com.example.my_bit.databinding.ActivitySignupBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.Firebase
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
-class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
+class SignupActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySignupBinding.inflate(layoutInflater) }
 
     lateinit var mAutn : FirebaseAuth
@@ -24,6 +27,7 @@ class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
 
         // 인증 초기화
         mAutn = Firebase.auth
@@ -38,16 +42,16 @@ class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             val password = binding.SignUpPwd.text.toString().trim() // 공백 제거
             val password2 = binding.SignUpPwd2.text.toString().trim() // 공백 제거
 
+            if(password == password2){
+                signUp(name,email,password)
+            }
+
             signUp(name,email,password)
             Log.d("회원가입 데이터 값 ","들어왔는지 확인")
         }
 
 
-        // 네이게이션 이벤트
-        binding.navi.setOnClickListener(){
-            binding.layoutDrawer.openDrawer(GravityCompat.START) // START : left  END : right
-        }
-        binding.navieView.setNavigationItemSelectedListener(this)
+
 
 
     }
@@ -58,42 +62,29 @@ class SignupActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 if (task.isSuccessful) {
                    // 성공시 실행
                     Log.d("회원가입 데이터 값 ","들어왔는지 확인")
-//                    val intent : Intent = Intent(this@SignupActivity,MainActivity::class.java)ㅕㄴㄷㄱ
-//                    startActivity(intent)
-                    addUserDatabase(name,email,mAutn.currentUser?.uid!!)
+                    val intent : Intent = Intent(this@SignupActivity,LoginActivity::class.java)
+                    startActivity(intent)
+                    addUserDatabase(name,email,password,mAutn.currentUser?.uid.toString())
+
+                    mDBRef.child("coin").child("${ mAutn.currentUser?.uid.toString()}").setValue(BitPoint(0,0,"${name.toString()}"))
 
                     Log.d("회원가입 데이터 값 ","${mAutn.currentUser?.uid!!}")
                 } else {
                    // 실패시 실행
-                    Log.d("실패","들어왔는지 확인")
+                    Log.d("실패","실패??")
                     Toast.makeText(this,"회원가입 실패",Toast.LENGTH_SHORT).show()
 
                 }
             }
 
     }
-    private fun addUserDatabase(name :String,email: String,uId: String){
+    private fun addUserDatabase(name :String,email: String, uId:String,password: String){
         val user = User(name,email,uId)
-        mDBRef.child("users").child(uId).setValue(user)
+        mDBRef.child("user").child(uId).setValue(User(name,email,password))
         Log.d("값확인","들어왔나요")
     }
 
 
 
-    // 네이게이션 메뉴 아이템 클릭시 수행 메서드
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val intent = Intent(this, LoginActivity::class.java) // 로그인 액티비티
-        val intent2 = Intent(this, MainActivity::class.java) // 메인 액티비티
-//        val intent3 = Intent(this, My_Champion::class.java) // 챔피언 스펠 액티비티
-//        val intent4 = Intent(this, My_RuneActivity::class.java) // 챔피언 룬 액티비티
-//        val intent5 = Intent(this, My_ItemListActivity::class.java) // 챔피언 룬 액티비티
-        when(item.itemId){
-            R.id.login -> startActivity(intent)
-            R.id.Bit -> startActivity(intent2)
-
-        }
-        binding.layoutDrawer.closeDrawers() //네이게이션 닫기
-        return false
-    }
 
 }
