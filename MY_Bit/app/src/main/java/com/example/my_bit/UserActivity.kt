@@ -73,6 +73,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val intent3 = Intent(this, MainActivity::class.java) //
         val intent4 = Intent(this, BitActivity::class.java) //
         val intent5 = Intent(this, SaleActivity::class.java) //
+        val intent6 = Intent(this, UserActivity::class.java) //
         when (item.itemId) {
             R.id.logout -> {
                 FirebaseAuth.getInstance().signOut()
@@ -84,6 +85,21 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 editor.clear();
                 editor.commit();
             }
+            R.id.user -> {
+                val userUID = intent.getStringExtra("id")
+                val pref = getSharedPreferences("Prefs", 0)
+                //shared에 있는 'userEmail'이란 데이터를 불러온다는 뜻. 0 대신 MODE_PRIVATE라고 입력하셔도 됩니다.
+                val savedEmail =pref.getString("email", "").toString()
+                val savedPwd =pref.getString("pwd", "").toString()
+
+                intent6.putExtra("id",userUID)
+                intent6.putExtra("email",savedEmail)
+                intent6.putExtra("password",savedPwd)
+
+                startActivity(intent6)
+
+            }
+
             R.id.main -> {
                 val userUID = intent.getStringExtra("id")
 
