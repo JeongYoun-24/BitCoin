@@ -60,6 +60,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val savedEmail =pref.getString("email", "").toString()
         val savedPwd =pref.getString("pwd", "").toString()
 
+
+        // 상점 액티비티 이동
+        binding.shopBut.setOnClickListener(){
+            val intent : Intent = Intent(this,ShopActivity::class.java)
+            intent.putExtra("id",userUID.toString())
+            startActivity(intent)
+
+        }
+
+        // 메인 홈 버튼
+        binding.MainBut.setOnClickListener(){
+            val intent : Intent = Intent(this,MainActivity::class.java)
+            intent.putExtra("id",userUID.toString())
+            startActivity(intent)
+
+        }
+
+        // 개인정보 액티비티로 연결
         binding.UserBut.setOnClickListener(){
             val intent : Intent = Intent(this,UserActivity::class.java)
             intent.putExtra("id",userUID)
@@ -98,7 +116,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-
+        // 코인 채굴
         binding.BitBut.setOnClickListener(){
             startsTime(userUID.toString())
             binding.BitBut.isEnabled = false
@@ -196,7 +214,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
                             binding.BitCoin.text = Editable.Factory.getInstance().newEditable(total.toString())
-                            mDBRef.child("coin").child("${userId.toString()}").setValue(UserBit(total.toString(),""))
+                            mDBRef.child("coin").child("${userId.toString()}").setValue(UserBit(total,""))
                         }
 
 //                        binding.BitCoin.text = Editable.Factory.getInstance().newEditable(dogi.toString())
@@ -263,6 +281,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val intent4 = Intent(this, BitActivity::class.java) //
         val intent5 = Intent(this, SaleActivity::class.java) //
         val intent6 : Intent = Intent(this,UserActivity::class.java)
+        val intent7 : Intent = Intent(this,UserListActivity::class.java)
         when (item.itemId) {
             R.id.logout -> {
                 FirebaseAuth.getInstance().signOut()
@@ -274,20 +293,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 editor.clear();
                 editor.commit();
             }
+            R.id.userList -> {
+                val userUID = intent.getStringExtra("id")
+                val pref = getSharedPreferences("Prefs", 0)
+                //shared에 있는 'userEmail'이란 데이터를 불러온다는 뜻. 0 대신 MODE_PRIVATE라고 입력하셔도 됩니다.
+                val savedEmail =pref.getString("email", "").toString()
+                val savedPwd =pref.getString("pwd", "").toString()
+
+                intent6.putExtra("id",userUID)
+                intent6.putExtra("email",savedEmail)
+                intent6.putExtra("password",savedPwd)
+
+                startActivity(intent7)
+            }
 
             R.id.user -> {
 
-                    val userUID = intent.getStringExtra("id")
-                    val pref = getSharedPreferences("Prefs", 0)
-                    //shared에 있는 'userEmail'이란 데이터를 불러온다는 뜻. 0 대신 MODE_PRIVATE라고 입력하셔도 됩니다.
-                    val savedEmail =pref.getString("email", "").toString()
-                    val savedPwd =pref.getString("pwd", "").toString()
+                val userUID = intent.getStringExtra("id")
+                val pref = getSharedPreferences("Prefs", 0)
+                //shared에 있는 'userEmail'이란 데이터를 불러온다는 뜻. 0 대신 MODE_PRIVATE라고 입력하셔도 됩니다.
+                val savedEmail =pref.getString("email", "").toString()
+                val savedPwd =pref.getString("pwd", "").toString()
 
-                    intent6.putExtra("id",userUID)
-                    intent6.putExtra("email",savedEmail)
-                    intent6.putExtra("password",savedPwd)
+                intent6.putExtra("id",userUID)
+                intent6.putExtra("email",savedEmail)
+                intent6.putExtra("password",savedPwd)
 
-                    startActivity(intent6)
+                startActivity(intent6)
 
             }
 

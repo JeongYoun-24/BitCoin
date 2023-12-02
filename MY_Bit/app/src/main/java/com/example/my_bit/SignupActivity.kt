@@ -47,7 +47,11 @@ class SignupActivity : AppCompatActivity() {
             }
 
             signUp(name,email,password)
-            Log.d("회원가입 데이터 값 ","들어왔는지 확인")
+            Log.d("회원가입 데이터 값 ","${name} 확인")
+            Log.d("회원가입 데이터 값 ","${email}")
+            Log.d("회원가입 데이터 값 ","${password} 확인")
+            Log.d("회원가입 데이터 값 ","${password2} 확인")
+
         }
 
 
@@ -66,7 +70,8 @@ class SignupActivity : AppCompatActivity() {
                     startActivity(intent)
                     addUserDatabase(name,email,password,mAutn.currentUser?.uid.toString())
 
-                    mDBRef.child("coin").child("${ mAutn.currentUser?.uid.toString()}").setValue(BitPoint(0,0,"${name.toString()}"))
+                    mDBRef.child("coin").child("${ mAutn.currentUser?.uid.toString()}").setValue(UserBit(0,"${name.toString()}"))
+                    mDBRef.child("point").child("${ mAutn.currentUser?.uid.toString()}").setValue(BitPoint(0,0,"${name.toString()}"))
 
                     Log.d("회원가입 데이터 값 ","${mAutn.currentUser?.uid!!}")
                 } else {
@@ -78,9 +83,9 @@ class SignupActivity : AppCompatActivity() {
             }
 
     }
-    private fun addUserDatabase(name :String,email: String, uId:String,password: String){
-        val user = User(name,email,uId)
-        mDBRef.child("user").child(uId).setValue(User(name,email,password))
+    private fun addUserDatabase(name :String,email: String,password: String,uId:String){
+        val user = User(name,email,password,uId)
+        mDBRef.child("user").child(uId).setValue(User(name,email,password,uId))
         Log.d("값확인","들어왔나요")
     }
 

@@ -94,7 +94,7 @@ class SaleActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
 
                         Log.d("포인트량2","${totalPoint.toString()}")
                         // 코인량 차감
-                        mDBRef.child("coin").child("${userUID.toString()}").setValue(UserBit(total.toString(),"${name.toString()}"))
+                        mDBRef.child("coin").child("${userUID.toString()}").setValue(UserBit(total,"${name.toString()}"))
                         // 포인트 적립
                         mDBRef.child("point").child("${userUID.toString()}").setValue(BitPoint(totalCount,totalPoint,"${name.toString()}"))
                         finish();
