@@ -14,6 +14,13 @@
             android:icon="@drawable/baseline_account_box_24"
             android:textColor="#D5C649"
             android:title="내정보"/>
+
+        <item android:id="@+id/userList"
+            android:icon="@drawable/baseline_account_box_24"
+            android:textColor="#D5C649"
+            android:title="다른회원정보"/>
+
+
         <item android:id="@+id/main"
             android:icon="@drawable/baseline_home_24"
             android:textColor="#D5C649"

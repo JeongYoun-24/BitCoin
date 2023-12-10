@@ -7,13 +7,21 @@ import android.text.Editable
 import android.util.Log
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.my_bit.adpter.FriendAdapter
+import com.example.my_bit.adpter.FriendListAdapter
+import com.example.my_bit.data.FriendData
+import com.example.my_bit.data.FriendListData
 import com.example.my_bit.databinding.ActivityMainBinding
 import com.example.my_bit.databinding.ActivityUserBinding
 import com.example.my_bit.`object`.BitLogin
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -22,6 +30,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var mAutn : FirebaseAuth
     private lateinit var mDBRef: DatabaseReference
+
+    lateinit var adapter : FriendListAdapter
+    lateinit var userList : ArrayList<FriendListData>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -34,6 +45,40 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mAutn = Firebase.auth
         // DB 초기화
         mDBRef = Firebase.database.reference
+
+
+        userList = ArrayList()
+
+        adapter = FriendListAdapter(this,userList)
+
+        binding.FriendUser.layoutManager  = LinearLayoutManager(this)
+        binding.FriendUser.adapter = adapter
+
+
+        mDBRef.child("user").child("${uId.toString()}").child("friend").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(postSnapshot in snapshot.children){
+                    // 유저 정보
+                    val currentUser = postSnapshot.getValue(FriendListData::class.java)
+
+                    Log.d("???","${currentUser!!}")
+
+//                    userList.add(currentUser!!)
+                    if(mAutn.currentUser?.uid != currentUser?.uid){
+
+                        userList.add(currentUser!!)
+                        Log.d("갑확인요", "${userList}")
+                    }
+
+                }
+                adapter.notifyDataSetChanged()
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+
 
 
 

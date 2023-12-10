@@ -81,8 +81,7 @@ class LoginActivity : AppCompatActivity(){
                 mAutn.signInWithEmailAndPassword(email.toString(), password.toString()).addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             // 성공시 실행
-                            val intent: Intent =
-                                Intent(this@LoginActivity, MainActivity::class.java)
+                            val intent: Intent = Intent(this@LoginActivity, MainActivity::class.java)
                             intent.putExtra("id", mAutn.currentUser?.uid)
                             Log.d("UUID값 확인","${mAutn.currentUser?.uid}")
                             startActivity(intent)
