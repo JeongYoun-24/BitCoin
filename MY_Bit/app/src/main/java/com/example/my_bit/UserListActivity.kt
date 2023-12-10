@@ -43,19 +43,30 @@ class UserListActivity : AppCompatActivity() {
 
         mDbRef.child("user").addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-              for(postSnapshot in snapshot.children){
-                  // 유저 정보
-                  val currentUser = postSnapshot.getValue(User::class.java)
-                  Log.d("데이터값확인요", currentUser?.uid.toString())
+                for(postSnapshot in snapshot.children){
+                    // 유저 정보
+                    val currentUser = postSnapshot.getValue(User::class.java)
+                    Log.d("데이터값확인요", currentUser?.uid.toString())
 
 
-                  if(mAuth.currentUser?.uid != currentUser?.uid){
 
-                      userList.add(currentUser!!)
-                      Log.d("갑확인요", "${userList}")
-                  }
 
-              }
+                    if(mAuth.currentUser?.uid != currentUser?.uid){
+                        userList.add(currentUser!!)
+                        Log.d("갑확인요", "${userList}")
+                        mDbRef.child("user").child("${mAuth.currentUser?.uid}").child("friend").child("${currentUser?.uid.toString()}").get().addOnSuccessListener {
+                            var uId =  it.child("uid").value
+                            Log.d("UId값 ", "${uId.toString()}")
+
+
+                        }
+
+
+
+
+                    }
+
+                }
                 adapter.notifyDataSetChanged()
 
             }

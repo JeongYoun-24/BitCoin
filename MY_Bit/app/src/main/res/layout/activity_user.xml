@@ -181,7 +181,7 @@
                 android:text="회원이름" />
 
             <EditText
-                android:id="@+id/editTextText2"
+                android:id="@+id/friendEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -208,7 +208,7 @@
                 android:text="코인갯수" />
 
             <EditText
-                android:id="@+id/editTextText3"
+                android:id="@+id/coinEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -247,15 +247,17 @@
 
                 <TextView
                     android:id="@+id/textView18"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="친구 추가된 회원 이름 " />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/FriendUser"
-                    android:layout_width="match_parent"
+                    android:layout_width="300dp"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="8dp"
+                    tools:listitem="@layout/friend_list" />
             </LinearLayout>
         </ScrollView>
 

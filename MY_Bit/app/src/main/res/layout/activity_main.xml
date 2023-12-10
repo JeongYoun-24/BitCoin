@@ -118,7 +118,7 @@
 
 
         <ImageView
-            android:id="@+id/settingsBut"
+            android:id="@+id/request"
             android:layout_width="48dp"
             android:layout_height="50dp"
             android:layout_marginEnd="5dp"
@@ -129,7 +129,7 @@
             app:iconTint="#0C0C0C"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/bell" />
+            app:srcCompat="@drawable/img_1" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"
@@ -176,6 +176,29 @@
             app:layout_constraintTop_toTopOf="@+id/toolbar2"
             app:layout_constraintVertical_bias="0.473"
             app:srcCompat="@drawable/shopping_cart" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/friendList"
+            android:layout_width="354dp"
+            android:layout_height="126dp"
+            app:layout_constraintBottom_toTopOf="@+id/toolbar2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Time"
+            tools:listitem="@layout/friend_request_list" />
+
+        <ImageView
+            android:id="@+id/request2"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="4dp"
+            android:backgroundTint="@color/design_default_color_error"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/img_2" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

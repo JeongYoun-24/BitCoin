@@ -3,6 +3,7 @@ package com.example.my_bit.adpter
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.my_bit.R
 import com.example.my_bit.User
+import com.example.my_bit.UserBit
 import com.example.my_bit.UserListActivity
+import com.example.my_bit.data.FriendData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -33,7 +36,7 @@ class UserAdapter(private val context : Context,private val userList :ArrayList<
 
     // 화면 설정
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-            val view : View = LayoutInflater.from(context).inflate(R.layout.user_list,parent,false)
+        val view : View = LayoutInflater.from(context).inflate(R.layout.user_list,parent,false)
         // 인증 초기화
         mAutn = Firebase.auth
         // DB 초기화
@@ -42,7 +45,7 @@ class UserAdapter(private val context : Context,private val userList :ArrayList<
         return UserViewHolder(view).apply{
             val intent = Intent(parent.context, UserListActivity::class.java)
 
-            val freindBut =itemView.findViewById<Button>(R.id.FriendBut) // 성별
+            val freindBut =itemView.findViewById<ImageView>(R.id.FriendBut) // 성별
             freindBut.setOnClickListener(){
                 Log.d("값확인","클릭했으")
 
@@ -51,9 +54,11 @@ class UserAdapter(private val context : Context,private val userList :ArrayList<
                 Log.d("현재포지션","${curPos.toString()}")
                 Log.d("객체형태 데이터값","${UserList.toString()}")
 
-                val sendUid = mAutn.currentUser?.uid
+                val sendUid = mAutn.currentUser?.uid // 보낸 사람 Uid
+                val recipient = UserList.uid
 
                 Log.d("보낸 사람의Uid","${sendUid.toString()}")
+                Log.d("받는 사람 사람의Uid","${recipient.toString()}")
                 // 보낸 친구요청
                 sendMsg = UserList.uid + sendUid
 
@@ -61,46 +66,46 @@ class UserAdapter(private val context : Context,private val userList :ArrayList<
                 receiverMsg = sendUid + UserList.uid
 
                 Log.d("보낸 친구요청","${sendMsg.toString()}")
-
                 Log.d("받는 친구요청","${receiverMsg.toString()}")
 
+                mDBRef.child("user").child("${sendUid.toString()}").get().addOnSuccessListener {
+                    var name = it.child("name").value
 
 
- /*
-                 intent.putExtra("email",UserList.email)
-                 intent.putExtra("name",UserList.name)
-                 intent.putExtra("Uid",UserList.uid)
+                    mDBRef.child("user").child("${sendUid.toString()}").child("friend").child("${recipient.toString()}").get().addOnSuccessListener {
+                        val uId = it.child("uid").value
+
+                        if(uId == null){
+                            mDBRef.child("friend").child("${recipient.toString()}").setValue(FriendData("친구요청","${name.toString()}","${sendUid.toString()}"))
+
+                        }else{
+                            Toast.makeText(context,"이미 친구추가 되어있습니다.",Toast.LENGTH_LONG).show()
+                        }
 
 
-                 ContextCompat.startActivity(parent.context,intent,null)*/
+                    }
+
+                }
+
+
+
+
+                /*
+                                intent.putExtra("email",UserList.email)
+                                intent.putExtra("name",UserList.name)
+                                intent.putExtra("Uid",UserList.uid)
+
+
+                                ContextCompat.startActivity(parent.context,intent,null)*/
             }
 
         }
 
-       /* return CustemViewHolder(view).apply {
-            val intent = Intent(parent.context, LoL_DetailActivity::class.java)
-
-            val gender = itemView.findViewById<ImageView>(R.id.iv_profile) // 성별
-
-            // 리사이클 클릭시 이벤트
-            itemView.setOnClickListener {
-                val curPos : Int = adapterPosition // 현재 포지션
-                val profile : Profiles = profileList.get(curPos) // 객체형태로 전달
-
-                val bitmap = (gender.drawable as BitmapDrawable).bitmap
-
-                intent.putExtra("gender",bitmap)
-                intent.putExtra("id",profile.id)
-                intent.putExtra("name",profile.name)
-                intent.putExtra("lain",profile.lain)
-                intent.putExtra("detail",profile.detail)
-
-                ContextCompat.startActivity(parent.context,intent,null)
-            }
-        }*/
 
 
-    }
+    } // Holder and
+
+
     // 데이터 설정
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val currentUser = userList[position]

@@ -1,19 +1,34 @@
 package com.example.my_bit
 
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.my_bit.adpter.FriendAdapter
+import com.example.my_bit.adpter.UserAdapter
+import com.example.my_bit.data.FriendData
 import com.example.my_bit.databinding.ActivityMainBinding
+import com.example.my_bit.databinding.ActivityUserBinding
 import com.example.my_bit.`object`.BitLogin
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.util.Timer
@@ -36,6 +51,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var mAutn : FirebaseAuth
     private lateinit var mDBRef: DatabaseReference
 
+    lateinit var adapter : FriendAdapter
+    lateinit var userList : ArrayList<FriendData>
+
+
+//    private val dlg = Dialog(this)
+
+
 //    var uId = intent.getStringExtra("id")
     var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +71,109 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         var userUID = intent.getStringExtra("id")
 
-
-
         Log.d("받은데이터 ",userUID.toString())
+
+        userList = ArrayList()
+
+        adapter = FriendAdapter(this,userList)
+
+        binding.friendList.layoutManager  = LinearLayoutManager(this)
+        binding.friendList.adapter = adapter
+
+
+        if( mDBRef.child("friend").child("${userUID.toString()}") == null){
+            binding.friendList.setVisibility(View.INVISIBLE) // 감추기
+            binding.request2.setVisibility(View.INVISIBLE)
+
+        }
+
+
+        if( mDBRef.child("friend").child("${userUID.toString()}") != null){
+            binding.friendList.setVisibility(View.INVISIBLE) // 감추기
+            binding.request.setVisibility(View.INVISIBLE)
+
+        }
+
+        binding.request2.setOnClickListener(){
+            val intent : Intent = Intent(this,FriendRequestActivity::class.java)
+
+            binding.friendList.setVisibility(View.VISIBLE)  // 보이기
+
+                binding.request.setVisibility(View.VISIBLE)
+                binding.request2.setVisibility(View.INVISIBLE)
+
+                mDBRef.child("friend").addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for(postSnapshot in snapshot.children){
+                            // 유저 정보
+                            val currentUser = postSnapshot.getValue(FriendData::class.java)
+                            Log.d("친구추가 요청 uId", currentUser?.uid.toString())
+
+                            Log.d("친구요청 받는사람 uId", mAutn?.uid.toString())
+
+
+                            if(mAutn.currentUser?.uid != currentUser?.uid){
+
+                                userList.add(currentUser!!)
+                                Log.d("갑확인요", "${userList}")
+                            }
+
+                        }
+                        adapter.notifyDataSetChanged()
+
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+
+                })
+
+
+
+
+
+            binding.request.setOnClickListener(){
+                binding.friendList.setVisibility(View.INVISIBLE)
+                binding.request2.setVisibility(View.VISIBLE)
+            }
+
+
+
+
+//            val mDialogView = LayoutInflater.from(this).inflate(R.layout.friend_request, null)
+//            val mBuilder = AlertDialog.Builder(this).setView(mDialogView).setTitle("최근 알림")
+//            intent.putExtra("id",userUID)
+//            startActivity(intent)
+
+//            Log.d("","${intent.getStringExtra("id")}")
+//            mBuilder.show()
+
+
+           /* val mDialogView = LayoutInflater.from(this).inflate(R.layout.friend_request, null)
+            val mBuilder = AlertDialog.Builder(this)
+                .setView(mDialogView)
+                .setTitle("최근 알림")
+//            mBuilder.show()
+            val  mAlertDialog = mBuilder.show()
+
+            val mDialogView2 = mDialogView
+
+            val noButton = mDialogView.findViewById<Button>(R.id.but1)
+            noButton.setOnClickListener {
+                mAlertDialog.dismiss()
+            }
+            userList = ArrayList()
+            adapter = FriendAdapter(this,userList)*/
+
+
+
+
+
+
+
+        }
+
+
+
 
 
 

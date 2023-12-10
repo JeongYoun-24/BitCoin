@@ -18,6 +18,9 @@
         android:theme="@style/Theme.MY_Bit"
         tools:targetApi="31">
         <activity
+            android:name=".FriendRequestActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserListActivity"
             android:exported="false" />
         <activity
